@@ -1,9 +1,38 @@
-.home-pic {
-    filter: blur(2px);
-    -webkit-filter: blur(2px);
+.home-main-img {
+    height: 100%;
+    width: 100%;
     object-fit: cover;
+    filter: blur(1.1px);
+    webkit-filter: blur(1.1px);
 }
 
-.home-pic-div {
 
+
+.home-main-params {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    left: 37%;
+    top: 60%;
+    position: absolute;
 }
+
+.home-main-params > button {
+    align-self: center;
+    width: 150px;
+    height: 40px;
+    left: 50%;
+}
+
+.home-main-params > input {
+    width: 350px;
+    height: 50px;
+    margin: 20px 0px;
+}
+
+.home-main-params > label {
+    color: white;
+    font-weight: bold;
+}
+

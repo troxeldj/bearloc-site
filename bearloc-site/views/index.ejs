@@ -1,7 +1,24 @@
 <%- include('./partials/head') %>
 <%- include ('./partials/nav') %>
-<div class="container home-pic-div">
-    <img class="home-pic" src="/img/house-home.jpg">
+<!-- <div class="home-main"">
+    <img src="./img/house-home.jpg">
+    <label for="bedrooms">Bedrooms</label>
+    <input type="number" min="1" max="10" name="bedrooms">
+    <label for="bathrooms">Bathrooms</label>
+    <input type="number" min="1" max="10" name="bathrooms">
+    <button>Testing</button>
+</div> -->
+
+<div class="row">
+    <div class="col-12 home-main">
+        <img src="./img/house-home.jpg" class="home-main-img">
+        <form class="home-main-params">
+            <label for="bedrooms">Number of Bedrooms</label>
+            <input type="number" min="1" max="10" placeholder="1" name="bedrooms" id="typeNumber" class="form-control home-main-bed-sel" />
+            <label for="bedrooms">Number of Bathrooms</label>
+            <input type="number" min="1" max="10" placeholder="1" name="bathrooms" id="typeNumber" class="form-control home-main-bath-sel" />
+            <button type="button" class="btn btn-danger home-main-search">Search</button>
+        </form>
+    </div>
 </div>
- 
 <%- include ('./partials/end_head') %>
