@@ -1,0 +1,9 @@
+.home-pic {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    object-fit: cover;
+}
+
+.home-pic-div {
+
+}
