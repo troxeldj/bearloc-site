@@ -7,14 +7,13 @@
 }
 
 
-
 .home-main-params {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    left: 37%;
-    top: 60%;
+    top: 30%;
+    left: 40%;
     position: absolute;
 }
 
