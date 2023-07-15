@@ -1,11 +1,10 @@
 .home-main-img {
-    height: 100%;
+    height: 700px;
     width: 100%;
     object-fit: cover;
-    filter: blur(1.1px);
-    webkit-filter: blur(1.1px);
+    filter: blur(1.25px);
+    webkit-filter: blur(1.25px);
 }
-
 
 .home-main-params {
     display: flex;
