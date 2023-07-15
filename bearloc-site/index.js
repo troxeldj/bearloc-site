@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express();
-let ejs = require('ejs');
+const ejs = require('ejs');
 const PORT = 3000;
-let bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const mariadb = require('mariadb');
+
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
@@ -14,7 +16,8 @@ app.get('/', (req, res) => {
 })
 
 app.post('/search', (req,res) => {
-    res.send(`Num Bed: ${req.body.bedrooms}` + "<br>" +  `Num Bath: ${req.body.bathrooms}`)
+    userparams = {bedrooms: req.body.bedrooms, bathrooms: req.body.bathrooms}
+    res.render('search', userparams)
 });
 
 app.listen(PORT, () => {
