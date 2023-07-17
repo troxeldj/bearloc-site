@@ -1,25 +1,69 @@
-const express = require('express');
+// Requires for Modules
+require("dotenv").config();
+const express = require("express");
 const app = express();
-const ejs = require('ejs');
+const ejs = require("ejs");
 const PORT = 3000;
-const bodyParser = require('body-parser');
-const mariadb = require('mariadb');
+const bodyParser = require("body-parser");
+const mariadb = require("mariadb");
 
-app.set('views', './views');
-app.set('view engine', 'ejs');
+// DB Connect
+const pool = mariadb.createPool({
+  host: process.env.SQL_HOST,
+  port: 3306,
+  user: process.env.SQL_USER,
+  password: process.env.SQL_PASSWORD,
+  database: process.env.SQL_DB_NAME,
+  connectionLimit: 10,
+});
+dbConnection(pool);
+console.log("Database Connection Established.");
 
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({extended: true}));
+// App Values
+app.set("views", "./views");
+app.set("view engine", "ejs");
 
-app.get('/', (req, res) => {
-    res.render('index', {});
-})
+// Mounted Middleware
+app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/search', (req,res) => {
-    userparams = {bedrooms: req.body.bedrooms, bathrooms: req.body.bathrooms}
-    res.render('search', userparams)
+app.get("/", (req, res) => {
+  res.render("index", {});
+});
+
+app.post("/search", async (req, res) => {
+  userparams = { bedrooms: req.body.bedrooms, bathrooms: req.body.bathrooms };
+  const foundListings = await getListings(pool);
+  res.render("search", {foundListings});
 });
 
 app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
+  console.log(`App listening on port ${PORT}`);
 });
+
+// Establish DB Connection
+async function dbConnection() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+  } catch (err) {
+    console.log("unable to establish db connection...");
+    console.log(err);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
+async function getListings(pool, bedrooms, bathrooms) {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query("SELECT * FROM LIST_LISTINGS");
+    return rows;
+  } catch (err) {
+    console.log("unable to establish db connection...");
+    console.log(err);
+  } finally {
+    if (conn) conn.release();
+  }
+}

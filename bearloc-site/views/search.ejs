@@ -1,8 +1,20 @@
-<%- include('./partials/head') %>
+<%- include ('./partials/head_search.ejs') %>
 <%- include ('./partials/nav') %>
 
-<h1>Listings Nearby</h1>
-<h1>Bedrooms: <%= userparams.bedrooms %></h1>
-<h1>Bathrooms: <%= userparams.bathrooms %></h1>
+<h1>Listings Matching Parameters</h1>
+<% for(let i=0; i < foundListings.length; i++) { %>
+  <div class="row">
+    <div class="search_listing">
+      <h2>Address: <%=foundListings[i].ADDRESSONE%></h2>
+      <% if(foundListings[i].ADDRESSTWO != null) { %>
+            <h2>Address2: <%=foundListings[i].ADDRESSTWO%></h>
+        <% } %>
+        <h2><%=foundListings[i].CITY%></h2>
+        <h2><%=foundListings[i].ZIPCODE%></h2>
+        <br>
+        <h2>Price: $<%=foundListings[i].PRICE%></h2>
+    </div>
+  </div>
+<% } %> 
 
 <%- include ('./partials/end_head') %>
