@@ -33,8 +33,14 @@ app.get("/", (req, res) => {
 
 app.post("/search", async (req, res) => {
   userparams = { bedrooms: req.body.bedrooms, bathrooms: req.body.bathrooms };
-  const foundListings = await getListings(pool);
-  res.render("search", {foundListings});
+  let foundListings = await getListings(pool);
+  templateListings = foundListings.filter(
+    (listing) =>
+      listing.NUMBEDROOMS == userparams.bedrooms &&
+      listing.NUMBATHROOMS == userparams.bathrooms
+  );
+  const avgPrice = templateListings.reduce((acc, listing) => acc + Number(listing.PRICE), 0);
+  res.render("search", { templateListings, userparams, avgPrice });
 });
 
 app.listen(PORT, () => {
