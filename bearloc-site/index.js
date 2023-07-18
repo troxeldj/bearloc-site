@@ -6,8 +6,9 @@ const ejs = require("ejs");
 const PORT = 3000;
 const bodyParser = require("body-parser");
 const mariadb = require("mariadb");
+const { Client } = require("@googlemaps/google-maps-services-js");
 
-// DB Connect
+// DB Connection
 const pool = mariadb.createPool({
   host: process.env.SQL_HOST,
   port: 3306,
@@ -18,6 +19,20 @@ const pool = mariadb.createPool({
 });
 dbConnection(pool);
 console.log("Database Connection Established.");
+
+// Google Maps Connection
+const client = new Client({});
+const geocodeArgs = {
+  params: {
+    key: process.env.GOOGLE_MAPS_API_KEY,
+  },
+};
+
+// Test Geocode
+// client.geocode(geocodeArgs).then((gcResponse) => {
+//   console.log(gcResponse.data.results[0].geometry.bounds.northeast.lat); // Lat
+//   console.log(gcResponse.data.results[0].geometry.bounds.northeast.lng); // Lng
+// });
 
 // App Values
 app.set("views", "./views");
@@ -39,7 +54,10 @@ app.post("/search", async (req, res) => {
       listing.NUMBEDROOMS == userparams.bedrooms &&
       listing.NUMBATHROOMS == userparams.bathrooms
   );
-  const avgPrice = templateListings.reduce((acc, listing) => acc + Number(listing.PRICE), 0);
+  const avgPrice = templateListings.reduce(
+    (acc, listing) => acc + Number(listing.PRICE),
+    0
+  );
   res.render("search", { templateListings, userparams, avgPrice });
 });
 
