@@ -7,6 +7,9 @@ const PORT = 3000;
 const bodyParser = require("body-parser");
 const mariadb = require("mariadb");
 const { Client } = require("@googlemaps/google-maps-services-js");
+const {
+  geocode,
+} = require("@googlemaps/google-maps-services-js/dist/geocode/geocode");
 
 // DB Connection
 const pool = mariadb.createPool({
@@ -21,18 +24,6 @@ dbConnection(pool);
 console.log("Database Connection Established.");
 
 // Google Maps Connection
-const client = new Client({});
-const geocodeArgs = {
-  params: {
-    key: process.env.GOOGLE_MAPS_API_KEY,
-  },
-};
-
-// Test Geocode
-// client.geocode(geocodeArgs).then((gcResponse) => {
-//   console.log(gcResponse.data.results[0].geometry.bounds.northeast.lat); // Lat
-//   console.log(gcResponse.data.results[0].geometry.bounds.northeast.lng); // Lng
-// });
 
 // App Values
 app.set("views", "./views");
@@ -58,7 +49,16 @@ app.post("/search", async (req, res) => {
     (acc, listing) => acc + Number(listing.PRICE),
     0
   );
-  res.render("search", { templateListings, userparams, avgPrice });
+
+  res.render("search", {
+    templateListings,
+    userparams,
+    avgPrice,
+    google_maps_key: process.env.GOOGLE_MAPS_API_KEY,
+    geoCodeLocation,
+    buildMapURL,
+    findDistancetoUC,
+  });
 });
 
 app.listen(PORT, () => {
@@ -90,4 +90,37 @@ async function getListings(pool, bedrooms, bathrooms) {
   } finally {
     if (conn) conn.release();
   }
+}
+
+async function geoCodeLocation(apiKey, address) {
+  const client = new Client({});
+  return client.geocode({
+    params: {
+      key: apiKey,
+      address: address,
+    },
+  });
+}
+
+async function findDistancetoUC(apiKey, destCoords) {
+  const originCoords = [39.1329, 84.515];
+  const client = new Client({});
+  return client.distancematrix({
+    params: {
+      key: apiKey,
+      origins: originCoords,
+      destinations: destCoords,
+    },
+  });
+}
+
+function buildMapURL(apiKey, address) {
+  const UC_ADDR = "2600 Clifton Ave, Cincinnati, OH 45220";
+  const encodedAddr = address.replaceAll(" ", "%20");
+  const baseURL = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}`;
+  // const destinationGeo = await geoCodeLocation(apiKey, address);
+  const newURL = baseURL.concat(
+    `&origin=${UC_ADDR}&destination=${address}&mode=walking`
+  );
+  return newURL;
 }
