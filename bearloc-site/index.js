@@ -56,6 +56,10 @@ app.post("/search", async (req, res) => {
       listing.NUMBATHROOMS == userparams.bathrooms
   );
 
+  if (templateListings.length === 0) {
+    return res.render("no_listings", {});
+  }
+
   // Filters
   if (
     req.body["filter__cost"] == "1" &&
@@ -124,7 +128,7 @@ app.post("/search", async (req, res) => {
     0
   );
 
-  res.render("search", {
+  return res.render("search", {
     templateListings,
     userparams,
     avgPrice,
