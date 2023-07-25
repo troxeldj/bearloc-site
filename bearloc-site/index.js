@@ -8,7 +8,14 @@ const PORT = 3000;
 const bodyParser = require("body-parser");
 const mariadb = require("mariadb");
 const { Client } = require("@googlemaps/google-maps-services-js");
-const {urlEncodeAddress, dbConnection, getListings, geoCodeLocation, buildMapURL, convertKmToMiles } = require('./public/js/util.js')
+const {
+  urlEncodeAddress,
+  dbConnection,
+  getListings,
+  geoCodeLocation,
+  buildMapURL,
+  convertKmToMiles,
+} = require("./public/js/util.js");
 const {
   geocode,
 } = require("@googlemaps/google-maps-services-js/dist/geocode/geocode");
@@ -54,6 +61,7 @@ app.post("/search", async (req, res) => {
     req.body["filter__cost"] == "1" &&
     !Object.values(req.body).includes("filter__distance")
   ) {
+    // Cost Filter
     templateListings.sort((a, b) =>
       Number(a.PRICE) > Number(b.PRICE) ? 1 : -1
     );
@@ -61,6 +69,7 @@ app.post("/search", async (req, res) => {
     req.body["filter__distance"] == "1" &&
     !Object.values(req.body).includes("filter__cost")
   ) {
+    // Distance Filter
     const client = new Client({
       key: process.env.GOOGLE_MAPS_API_KEY,
     });
@@ -79,26 +88,34 @@ app.post("/search", async (req, res) => {
           key: process.env.GOOGLE_MAPS_API_KEY,
           origins: [UC_COORDS],
           destinations: [{ lat: geoCodeLoc[0], lng: geoCodeLoc[1] }],
-          TravelMode: 'walking',
+          TravelMode: "walking",
         },
         timeout: 1000,
       });
       const distanceInfo = {
-        distance_mi: Number(convertKmToMiles(Number(disRes.data.rows[0].elements[0].distance.text.split(' ')[0])).toFixed(2)),
-        distance_km: Number(disRes.data.rows[0].elements[0].distance.text.split(' ')[0]),
-        duration_min: Number(disRes.data.rows[0].elements[0].duration.text.split(' ')[0])
-      }
-      templateListings[i].MAPSINFO = distanceInfo
+        distance_mi: Number(
+          convertKmToMiles(
+            Number(disRes.data.rows[0].elements[0].distance.text.split(" ")[0])
+          ).toFixed(2)
+        ),
+        distance_km: Number(
+          disRes.data.rows[0].elements[0].distance.text.split(" ")[0]
+        ),
+        duration_min: Number(
+          disRes.data.rows[0].elements[0].duration.text.split(" ")[0]
+        ),
+      };
+      templateListings[i].MAPSINFO = distanceInfo;
     }
-    templateListings.sort(function(a,b) {
-      if ( a.MAPSINFO.distance_km > b.MAPSINFO.distance_km ){
+    templateListings.sort(function (a, b) {
+      if (a.MAPSINFO.distance_km > b.MAPSINFO.distance_km) {
         return 1;
       }
-      if ( a.MAPSINFO.distance_km < b.MAPSINFO.distance_km ){
+      if (a.MAPSINFO.distance_km < b.MAPSINFO.distance_km) {
         return -1;
       }
       return 0;
-    })
+    });
   }
 
   // Average Price Calculation
