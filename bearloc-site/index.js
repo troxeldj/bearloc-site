@@ -12,6 +12,8 @@ const {
   geocode,
 } = require("@googlemaps/google-maps-services-js/dist/geocode/geocode");
 
+const UC_COORDS = { lat: 39.1329, lng: -84.515 };
+
 // DB Connection
 const pool = mariadb.createPool({
   host: process.env.SQL_HOST,
@@ -56,36 +58,51 @@ app.post("/search", async (req, res) => {
     templateListings.sort((a, b) =>
       Number(a.PRICE) > Number(b.PRICE) ? 1 : -1
     );
-  // } else if (
-  //   req.body["filter__distance"] == "1" &&
-  //   !Object.values(req.body).includes("filter__cost")
-  // ) {
-  //   const client = new Client({
-  //     key: process.env.GOOGLE_MAPS_API_KEY
-  //   });
-  //   for (let i = 0; i < templateListings.length; i++) {
-  //     UC_COORDS = {lat:39.1329, lng: 84.5150}
-  //     geoCodeLoc = await geoCodeLocation(
-  //       process.env.GOOGLE_MAPS_API_KEY,
-  //       `${templateListings[i].ADDRESSONE} ${templateListings[i].CITY} OH`
-  //     ).then((resp) => [
-  //       Number(resp.data.results[0].geometry.location.lat),
-  //       Number(resp.data.results[0].geometry.location.lng),
-  //     ]);
-      
-  //     const disRes = await client.distancematrix({
-  //       params : {
-  //         key: process.env.GOOGLE_MAPS_API_KEY,
-  //         origins: [UC_COORDS],
-  //         destinations: [{lat: geoCodeLoc[0], lng: geoCodeLoc[1]}]
-  //       },
-  //       timeout: 1000
-  //     })
-  //     console.log(disRes.data.rows[0].elements)
-  //   }
+  } else if (
+    req.body["filter__distance"] == "1" &&
+    !Object.values(req.body).includes("filter__cost")
+  ) {
+    const client = new Client({
+      key: process.env.GOOGLE_MAPS_API_KEY,
+    });
+
+    for (let i = 0; i < templateListings.length; i++) {
+      geoCodeLoc = await geoCodeLocation(
+        process.env.GOOGLE_MAPS_API_KEY,
+        `${templateListings[i].ADDRESSONE} ${templateListings[i].CITY} OH ${templateListings[i].ZIPCODE}`
+      ).then((resp) => [
+        Number(resp.data.results[0].geometry.location.lat),
+        Number(resp.data.results[0].geometry.location.lng),
+      ]);
+
+      const disRes = await client.distancematrix({
+        params: {
+          key: process.env.GOOGLE_MAPS_API_KEY,
+          origins: [UC_COORDS],
+          destinations: [{ lat: geoCodeLoc[0], lng: geoCodeLoc[1] }],
+          TravelMode: 'walking',
+        },
+        timeout: 1000,
+      });
+      const distanceInfo = {
+        distance_mi: Number(convertKmToMiles(Number(disRes.data.rows[0].elements[0].distance.text.split(' ')[0])).toFixed(2)),
+        distance_km: Number(disRes.data.rows[0].elements[0].distance.text.split(' ')[0]),
+        duration_min: Number(disRes.data.rows[0].elements[0].duration.text.split(' ')[0])
+      }
+      templateListings[i].MAPSINFO = distanceInfo
+    }
+    templateListings.sort(function(a,b) {
+      if ( a.MAPSINFO.distance_km > b.MAPSINFO.distance_km ){
+        return 1;
+      }
+      if ( a.MAPSINFO.distance_km < b.MAPSINFO.distance_km ){
+        return -1;
+      }
+      return 0;
+    })
   }
 
-  // Get Average Price
+  // Average Price Calculation
   const avgPrice = templateListings.reduce(
     (acc, listing) => acc + Number(listing.PRICE),
     0
@@ -105,9 +122,13 @@ app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
 
+
+
+
+
+
 // Util Functions
 async function urlEncodeAddress(address) {
-
   const encodedAddr = address
     .replaceAll(" ", "%20")
     .replaceAll(",", "%2C")
@@ -162,4 +183,8 @@ function buildMapURL(apiKey, address) {
     `&origin=${UC_ADDR}&destination=${address}&mode=walking`
   );
   return newURL;
+}
+
+function convertKmToMiles(km) {
+  return km * 0.621371;
 }
