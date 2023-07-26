@@ -56,7 +56,7 @@
             aria-expanded="false"
             style="width: 100px; margin-left: 10px"
           >
-            Filters
+            Sort By
           </button>
           <ul class="dropdown-menu">
             <li>
@@ -66,24 +66,36 @@
             </li>
             <li>
               <label>
-                <input type="checkbox" name="filter__distance" value="1" /> Distance
+                <input type="checkbox" name="filter__distance" value="1" />
+                Distance
               </label>
             </li>
           </ul>
         </div>
 
-        <a
-          href="https://www.dropbox.com/scl/fi/8zvxhdns30xdhpv4yttok/Bearloc_User_Help_Document.docx?rlkey=or7xw5tehclrgndwi1ah5gcu1&dl=0"
-          ><button
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle btn-success"
             type="button"
-            class="btn btn-success"
-            style="margin-left: 20px"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style="width: 100px; margin-left: 10px"
           >
             Help
-          </button></a
-        >
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="../contact">Contact</a></li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="https://www.dropbox.com/scl/fi/8zvxhdns30xdhpv4yttok/Bearloc_User_Help_Document.docx?rlkey=or7xw5tehclrgndwi1ah5gcu1&dl=0"
+                target="_blank"
+                >Help Doc</a
+              >
+            </li>
+          </ul>
+        </div>
       </form>
     </div>
   </div>
 </nav>
-<div class="container-fluid"></div>

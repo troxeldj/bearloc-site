@@ -43,7 +43,11 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.render("index", {});
+  return res.render("index", {});
+});
+
+app.get("/contact", (req, res) => {
+  return res.render("contact", {});
 });
 
 // Routes

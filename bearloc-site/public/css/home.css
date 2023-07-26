@@ -1,6 +1,10 @@
+.home-main {
+    padding: 0;
+}
+
 .home-main-img {
     height: 700px;
-    width: 100%;
+    width: 100vw;
     object-fit: cover;
     filter: blur(1.25px);
     webkit-filter: blur(1.25px);
@@ -16,6 +20,7 @@ nav label {
 #bathroom_selector_nav {
     margin-right: 20px;
 }
+
 .home-main-params {
     display: flex;
     flex-direction: column;
