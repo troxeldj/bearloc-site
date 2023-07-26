@@ -50,6 +50,10 @@ app.get("/contact", (req, res) => {
   return res.render("contact", {});
 });
 
+app.get("/faq", (req, res) => {
+  return res.render("faq", {});
+});
+
 // Routes
 app.post("/search", async (req, res) => {
   userparams = { bedrooms: req.body.bedrooms, bathrooms: req.body.bathrooms };

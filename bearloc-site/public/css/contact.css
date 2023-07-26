@@ -26,6 +26,7 @@ nav label {
   align-items: center;
   background: #fbf7f5;
   border-radius: 1rem;
+  cursor: pointer;
 }
 
 .pre-contact__img {
@@ -33,6 +34,9 @@ nav label {
 }
 
 
+.contact__email-form > h2, .contact__email-form > p {
+  text-align: center;
+}
 
 .contact {
   padding-top: 1rem;
@@ -62,7 +66,7 @@ nav label {
 }
 
 .contact__email-form__btn {
-  padding: 0.75rem 0.5rem;
   width: 20%;
   align-self: center;
+  margin-bottom: 3rem;
 }
