@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bearloc Application</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <link href="/css/about.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <%- include ('./partials/nav') %>
+    <section class="about">
+      <h1>About</h1>
+      <p>
+        Bearloc is a web application meant to help students find housing near
+        campus. With bearloc, users can view property information and the
+        distance the listing is from campus. The application saves users time,
+        money, and helps prevent housing scams. Using bearloc can save college
+        students immense amounts of time and serves as a one stop shop to find
+        reasonable housing near school. We at bearloc strive for the best user
+        experience for all users.
+      </p>
+      <h2 class="about__section__header">At Bearloc - We Save Students</h2>
+      <div class="about__section-container">
+        <div class="about__section">
+          <h2 class="about__section__save">Time</h2>
+          <img class="about__section__img" src="/img/clock.png" alt="" />
+          <p class="about__section__content">
+            Bearloc saves students time by organizing all listings near campus
+            into an easy to digest format.
+          </p>
+        </div>
+        <div class="about__section">
+          <h2 class="about__section__save">Money</h2>
+          <img class="about__section__img-money" src="/img/money.png" alt="" />
+          <p class="about__section__content">
+            Bearloc saves students money by displaying average pricing and
+            allowing users to sort listings by ascending price.
+          </p>
+        </div>
+        <div class="about__section">
+          <h2 class="about__section__save">Stress</h2>
+          <img class="about__section__img-stress" src="/img/stress.png" alt="" />
+          <p class="about__section__content">
+            Bearloc saves students stress by provided an all in one platform to
+            search, sort, and filter housing. 
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

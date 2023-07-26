@@ -46,6 +46,10 @@ app.get("/", (req, res) => {
   return res.render("index", {});
 });
 
+app.get("/about", (req, res) => {
+  return res.render("about", {});
+});
+
 app.get("/contact", (req, res) => {
   return res.render("contact", {});
 });
